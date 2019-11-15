@@ -3,32 +3,47 @@ from matplotlib import pyplot as plt
 
 
 
-def genNaryString(n, els_left=None, res_str="", res_arr=[]):
+
+def genNaryString(n, els_left=None, res_str=[], res_arr=[]):
 	if els_left == None:
+		res_arr = [] # For some reason this needs to be reset
 		els_left = n**2-1
-	# res = []
 	for i in range(n):
+		next_res_str = [*res_str, i]
 		if els_left <= 0:
-			res_arr.append(res_str + "{}".format(i))
+			res_arr.append(next_res_str)
 		else:
-			res_arr.append(genNaryString(n, els_left-1, res_str +  "{}".format(i), res_arr))
-		# 	res.append(genNaryString(n, els_left-1, [i]))
+			genNaryString(n, els_left-1, next_res_str, res_arr)
 	return res_arr
 
-# Find latin squares with a brute force method, iterating through 
-# all possible matrices, simply checking conditions of latin squarness
-def findLatinSquaresBruteForce(n):
-	arr = np.ones((n,n))
+def genMultiset(n):
+	pass
 
-	numSquares = n**(n**2)
-	for sqNum in numSquares:
-		# TODO: Figure out how to generate all possible matrices
-		pass
+# Find matrices of size nxn with integers 0 to n-1
+def findAllMatrices(n):
+	squareArrays = genNaryString(n)
+	# print(len(squareArrays))
+	res = []
+	for sqNum in squareArrays:
+		# print(sqNum)
+		res.append(np.reshape(sqNum, (n, n)))
+	# print("Res Length: ", len(res))
+	return res
 
-	# 		for k in range(n):
-	# 			arr[i,j] = k +1
-	# 			print(arr)
+# Finds all Latin Squares using a brute force method, simply 
+# checking if each possible matrix is a latin square.
+def findAllLatinSquaresBF(n):
+	squareArray = findAllMatrices(n)
+	res = []
+	for square in squareArray:
+		if checkSquare(square):
+			res.append(square)
+	return res
 
+# Finds all Latin Squares using finesse force. Slightly more elgant than
+# brute force.
+def findAllLatinSquareFF(n):
+	pass
 
 def checkSquare(Sq):
 	(size, _) = Sq.shape
@@ -43,7 +58,7 @@ def checkSquare(Sq):
 
 	for col in np.transpose(Sq):
 		isIn = {}
-		for elt in row:
+		for elt in col:
 			if (not elt in isIn) and elt <= size:
 				isIn[elt] = True
 			else:
@@ -53,15 +68,9 @@ def checkSquare(Sq):
 
 
 def main():
-	testSquare = np.asarray([[1,2,3],
-							[2,3,1],
-							[3,1,2]])
-	isSquare = checkSquare(testSquare)
-	print(isSquare)
+	latinSquares = findAllLatinSquaresBF(3)
+	print(len(latinSquares))
 
-	# findLatinSquaresBruteForce(3)
-	strs = genNaryString(2)
-	print(strs)
 
 if __name__ == '__main__':
 	main()
