@@ -1,6 +1,7 @@
 import numpy as np 
 from matplotlib import pyplot as plt
 
+from sympy.utilities.iterables import multiset_permutations
 
 
 
@@ -17,7 +18,43 @@ def genNaryString(n, els_left=None, res_str=[], res_arr=[]):
 	return res_arr
 
 def genMultiset(n):
-	pass
+	a = np.arange(n)
+	return list(multiset_permutations(a))
+
+def getDerangements(inputs):
+
+	perms = genMultiset(len(inputs))
+	res = []
+	for perm_try in perms:
+		isDer = True
+		for i in range(len(perm_try)):
+			if inputs[i] == perm_try[i]:
+				isDer = False
+		if isDer:
+			res.append(perm_try)
+	return res
+
+# 
+def numDerangements(n, depth):
+	perms = genMultiset(n)
+	permsDeranged = getDerangements(n)
+	print(permsDeranged)
+	# Note: It depends on whether you loop through perms or 
+	# permsDeranged first whether the len(ans) is consistent
+	accum = 0
+	for perm in perms:
+		res = []
+		for perm_try in permsDeranged:
+			isDer = True
+			# print("Perms: ", perm, perm_try)
+			for i in range(len(perm_try)):
+				if perm[i] == perm_try[i]:
+					isDer = False
+			if isDer:
+				res.append(perm_try)
+				accum = accum + 1
+		print(len(res))
+	print(accum)
 
 # Find matrices of size nxn with integers 0 to n-1
 def findAllMatrices(n):
@@ -45,6 +82,13 @@ def findAllLatinSquaresBF(n):
 def findAllLatinSquareFF(n):
 	pass
 
+
+# Find out how many derangements exist that satisfy the criteria of
+# multiple 
+def multiDerrangement(inputs):
+	x, n = inputs.shape()
+
+
 def checkSquare(Sq):
 	(size, _) = Sq.shape
 
@@ -68,8 +112,17 @@ def checkSquare(Sq):
 
 
 def main():
-	latinSquares = findAllLatinSquaresBF(3)
-	print(len(latinSquares))
+	# latinSquares = findAllLatinSquaresBF(3)
+	# print(len(latinSquares))
+
+	# perms = 
+	
+	ders = getDerangements(np.array([0,1,2,3]))
+	print(ders)
+
+	# ders = numDerangements(4, 1)
+	# # print(len(ders))
+
 
 
 if __name__ == '__main__':
