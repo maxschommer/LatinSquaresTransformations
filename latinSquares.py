@@ -4,7 +4,9 @@ from matplotlib import pyplot as plt
 from sympy.utilities.iterables import multiset_permutations
 
 
-
+# Generate all strings of length n**2 made with n symbols.
+# TODO: Make this function able to work one at a time using 
+# modular arithmetic.
 def genNaryString(n, els_left=None, res_str=[], res_arr=[]):
 	if els_left == None:
 		res_arr = [] # For some reason this needs to be reset
@@ -17,10 +19,12 @@ def genNaryString(n, els_left=None, res_str=[], res_arr=[]):
 			genNaryString(n, els_left-1, next_res_str, res_arr)
 	return res_arr
 
+# Generate the set of all permutations of size n.
 def genMultiset(n):
 	a = np.arange(n)
 	return list(multiset_permutations(a))
 
+# Generate all derangements of an input vector.
 def getDerangements(inputs):
 
 	perms = genMultiset(len(inputs))
@@ -34,7 +38,9 @@ def getDerangements(inputs):
 			res.append(perm_try)
 	return res
 
-# 
+# NOTE: Currently an experimental function that's not
+# fully implemented, and doesn't mean what it's function name
+# means. 
 def numDerangements(n, depth):
 	perms = genMultiset(n)
 	permsDeranged = getDerangements(n)
@@ -89,6 +95,7 @@ def multiDerrangement(inputs):
 	x, n = inputs.shape()
 
 
+# Checks whether an nxn matrix is a latin square.
 def checkSquare(Sq):
 	(size, _) = Sq.shape
 
